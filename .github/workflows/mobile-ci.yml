@@ -3,9 +3,9 @@ name: Mobile CI
 on:
   push:
     branches: [main]
-    paths: ["mobile/**", ".github/workflows/mobile-ci.yml"]
+    paths: ["loveline/**", ".github/workflows/mobile-ci.yml"]
   pull_request:
-    paths: ["mobile/**", ".github/workflows/mobile-ci.yml"]
+    paths: ["loveline/**", ".github/workflows/mobile-ci.yml"]
   workflow_call:
 
 concurrency:
@@ -46,7 +46,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: couverture-mobile
-          path: mobile/coverage/lcov.info
+          path: loveline/coverage/lcov.info
           if-no-files-found: ignore
 
   android:
