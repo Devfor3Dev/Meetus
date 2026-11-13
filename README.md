@@ -1,15 +1,15 @@
-# Loveline — Mobile Dating Application
+# Loveline Mobile Dating Application
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.27+-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.6+-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev)
 [![Riverpod](https://img.shields.io/badge/State_Management-Riverpod_2.6-00599C?style=for-the-badge)](https://riverpod.dev)
 [![FastAPI](https://img.shields.io/badge/Sandbox_Backend-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](sandbox/fastapi-auth)
 
-**Loveline** est une application mobile de rencontre universitaire axée sur la simplicité, la sécurité et la proximité sur le campus. Ce dépôt contient le client mobile Flutter (Android & iOS) couvrant le parcours d'onboarding complet, l'authentification multi-fournisseurs (E-mail, Google, Facebook), la gestion avancée des sessions et la protection des données.
+**Loveline** est une application mobile de rencontre pour l'université de Kara axée sur la simplicité, la sécurité et la proximité sur le campus. Ce dépôt contient le client mobile Flutter (Android & iOS) couvrant le parcours d'onboarding complet, l'authentification multi-fournisseurs (E-mail, Google, Facebook), la gestion avancée des sessions et la protection des données.
 
 ---
 
-## 📋 Table des matières
+##  Table des matières
 
 - [Fonctionnalités](#-fonctionnalités)
 - [Architecture & Principes de Conception](#-architecture--principes-de-conception)
@@ -28,7 +28,7 @@
 
 ---
 
-## 📱 Fonctionnalités
+##  Fonctionnalités
 
 - **Onboarding Immersif :** Carrousel multi-diapositive avec effet parallaxe, animations fluides basées sur la position du doigt et support de l'accessibilité.
 - **Authentification Sécurisée & Souple :**
@@ -45,7 +45,7 @@
 
 ---
 
-## 🏗️ Architecture & Principes de Conception
+##  Architecture & Principes de Conception
 
 Le projet adopte une **Architecture Propre en Couches (Clean / Layered Architecture)** combinée avec la gestion d'état **Riverpod** et l'injection de dépendances via **GetIt** / **Injectable**.
 
@@ -79,7 +79,7 @@ Le projet adopte une **Architecture Propre en Couches (Clean / Layered Architect
 
 ---
 
-## 🔄 Diagrammes de Flux d'Authentification
+##  Diagrammes de Flux d'Authentification
 
 ### Flux Général de Redirection
 ```
@@ -141,7 +141,7 @@ Avant de commencer, assurez-vous de disposer des éléments suivants :
 
 ---
 
-## 🚀 Installation & Démarrage
+##  Installation & Démarrage
 
 ### 1. Cloner le projet
 ```bash
@@ -167,7 +167,7 @@ flutter test
 
 ---
 
-## 🌐 Environnement de Développement & Réseau
+##  Environnement de Développement & Réseau
 
 L'application communique avec l'API backend via la variable d'environnement `API_BASE_URL` configurée au moment du lancement.
 
@@ -209,7 +209,7 @@ Pour tester l'application sur un **téléphone Android ou iOS réel**, l'apparei
 
 ---
 
-## ⚙️ Configuration des Fournisseurs OAuth (Google & Facebook)
+## Configuration des Fournisseurs OAuth (Google & Facebook)
 
 ### Google Authentication Setup
 
@@ -232,7 +232,7 @@ Pour tester l'application sur un **téléphone Android ou iOS réel**, l'apparei
 
 ---
 
-## 📡 Documentation de l'API (Contrat d'Authentification)
+##  Documentation de l'API (Contrat d'Authentification)
 
 Le backend (Sandbox ou Django) doit implémenter les points de terminaison suivants :
 
@@ -252,7 +252,7 @@ Le backend (Sandbox ou Django) doit implémenter les points de terminaison suiva
 
 ---
 
-## 📂 Structure du Projet
+##  Structure du Projet
 
 ```
 loveline/
@@ -289,7 +289,7 @@ loveline/
 
 ---
 
-## 🧪 Tests & Assurance Qualité
+##  Tests & Assurance Qualité
 
 Le projet inclut une suite complète de tests automatiques (unitaires, de widgets et de comportement du routeur).
 
@@ -303,7 +303,7 @@ flutter test --coverage
 
 ---
 
-## ⚙️ CI/CD & Déploiement
+##  CI/CD & Déploiement
 
 Le projet utilise **GitHub Actions** pour valider et compiler l'application à chaque mise à jour :
 
@@ -312,6 +312,6 @@ Le projet utilise **GitHub Actions** pour valider et compiler l'application à c
 
 ---
 
-## 📄 Licence
+##  Licence
 
 Ce projet est sous licence **MIT**. Voir le fichier [LICENSE](LICENSE) pour plus d'informations.
