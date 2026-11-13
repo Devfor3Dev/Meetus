@@ -77,7 +77,7 @@ class _HomePlaceholder extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  name == null ? "Accueil à brancher par l'équipe" : 'Bonjour $name',
+                  name == null ? "Accueil à revoir" : 'Bonjour $name',
                   style: Theme.of(context).textTheme.headlineMedium,
                   textAlign: TextAlign.center,
                 ),
