@@ -1,0 +1,124 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [main]
+    paths: ["Backend/**", ".github/workflows/backend-ci.yml"]
+  pull_request:
+    paths: ["Backend/**", ".github/workflows/backend-ci.yml"]
+  workflow_call:
+
+concurrency:
+  group: backend-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: Backend/Loveline
+
+env:
+  PYTHON_VERSION: "3.12"
+  SECRET_KEY: ci-secret-ci-secret-ci-secret-1234567890
+  DJANGO_SECRET_KEY: ci-secret-ci-secret-ci-secret-1234567890
+  DATABASE_URL: postgresql://loveline:loveline@localhost:5432/loveline
+
+jobs:
+  lint:
+    name: Qualité du code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install ruff
+      - run: ruff check --select E9,F63,F7,F82 .
+
+  test:
+    name: Tests sur PostgreSQL
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: loveline
+          POSTGRES_PASSWORD: loveline
+          POSTGRES_DB: loveline
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U loveline"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: Backend/Loveline/requirements*.txt
+      - name: Choisir le module de réglages Django
+        env:
+          SETTINGS_MODULE: ${{ vars.DJANGO_SETTINGS_MODULE }}
+        run: |
+          if [ -n "$SETTINGS_MODULE" ]; then echo "DJANGO_SETTINGS_MODULE=$SETTINGS_MODULE" >> "$GITHUB_ENV"; fi
+      - name: Installer les dépendances
+        run: |
+          pip install -r requirements.txt
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+      - name: Contrôles Django
+        run: python manage.py check
+      - name: Vérifier qu'aucune migration n'est oubliée
+        run: python manage.py makemigrations --check --dry-run
+      - name: Appliquer les migrations
+        run: python manage.py migrate --noinput
+      - name: Tester
+        run: |
+          if [ -f pytest.ini ] || grep -qs "\[tool.pytest" pyproject.toml; then
+            pip install pytest pytest-django
+            pytest
+          else
+            python manage.py test
+          fi
+
+  audit:
+    name: Audit des dépendances
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install pip-audit==2.10.1
+      - run: pip-audit -r requirements.txt
+
+  docker:
+    name: Image Docker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Construire l'image
+        uses: docker/build-push-action@v6
+        with:
+          context: Backend/Loveline
+          load: true
+          tags: loveline-backend:ci
+          build-args: |
+            WSGI_MODULE=${{ vars.DJANGO_WSGI_MODULE || 'Loveline.wsgi:application' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Vérifier que Django démarre dans l'image
+        working-directory: Backend/Loveline
+        env:
+          DJANGO_SETTINGS_MODULE: ${{ vars.DJANGO_SETTINGS_MODULE }}
+        run: |
+          docker run --rm \
+            -e SECRET_KEY="$SECRET_KEY" \
+            -e DJANGO_SECRET_KEY="$DJANGO_SECRET_KEY" \
+            -e DATABASE_URL=sqlite:////tmp/ci.sqlite3 \
+            ${DJANGO_SETTINGS_MODULE:+-e DJANGO_SETTINGS_MODULE="$DJANGO_SETTINGS_MODULE"} \
+            loveline-backend:ci python manage.py check

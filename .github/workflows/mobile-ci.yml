@@ -1,0 +1,82 @@
+name: Mobile CI
+
+on:
+  push:
+    branches: [main]
+    paths: ["lib/**", "pubspec.yaml", "android/**", "ios/**", ".github/workflows/mobile-ci.yml"]
+  pull_request:
+    paths: ["lib/**", "pubspec.yaml", "android/**", "ios/**", ".github/workflows/mobile-ci.yml"]
+  workflow_call:
+
+concurrency:
+  group: mobile-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: .
+
+jobs:
+  check:
+    name: Analyse et tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Formatage du code
+        run: dart format .
+      - name: Vérifier que l'injection générée est à jour
+        run: |
+          dart run build_runner build --delete-conflicting-outputs
+          if ! git diff --exit-code -- lib/core/di/injection.config.dart; then
+            echo "::error::injection.config.dart n'est pas à jour. Lancez build_runner en local et versionnez le résultat."
+            exit 1
+          fi
+      - name: Analyser
+        run: flutter analyze --no-fatal-infos
+      - name: Tester
+        run: flutter test --coverage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: couverture-mobile
+          path: coverage/lcov.info
+          if-no-files-found: ignore
+
+  android:
+    name: Compilation Android
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Chercher le dossier android
+        id: platform
+        run: |
+          if [ -d android ]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "::warning::Pas de dossier android/, compilation ignorée. Lancez flutter create --platforms=android,ios ."; fi
+      - if: steps.platform.outputs.present == 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - if: steps.platform.outputs.present == 'true'
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - if: steps.platform.outputs.present == 'true'
+        run: flutter pub get
+      - if: steps.platform.outputs.present == 'true'
+        name: Construire l'APK de debug
+        run: flutter build apk --debug --dart-define=USE_FAKE_BACKEND=true
+      - if: steps.platform.outputs.present == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: loveline-debug-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 7
