@@ -21,9 +21,7 @@ def _body(code: str, message: str, details: object = None) -> dict[str, object]:
     error: dict[str, object] = {"code": code, "message": message}
     if details is not None:
         error["details"] = details
-    return {
-        "error": error
-    }
+    return {"error": error}
 
 
 def install_error_handlers(app: FastAPI) -> None:
@@ -34,10 +32,7 @@ def install_error_handlers(app: FastAPI) -> None:
     @app.exception_handler(RequestValidationError)
     async def _validation(request: Request, exc: RequestValidationError) -> JSONResponse:
         fields = [
-            {
-                "field": ".".join(str(p) for p in e["loc"][1:]),
-                "type": e["type"]
-            }
+            {"field": ".".join(str(p) for p in e["loc"][1:]), "type": e["type"]}
             for e in exc.errors()
         ]
         return JSONResponse(

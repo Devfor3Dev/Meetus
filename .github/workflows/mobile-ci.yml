@@ -3,9 +3,9 @@ name: Mobile CI
 on:
   push:
     branches: [main]
-    paths: ["mobile/**", ".github/workflows/mobile-ci.yml"]
+    paths: ["lib/**", "pubspec.yaml", "android/**", "ios/**", ".github/workflows/mobile-ci.yml"]
   pull_request:
-    paths: ["mobile/**", ".github/workflows/mobile-ci.yml"]
+    paths: ["lib/**", "pubspec.yaml", "android/**", "ios/**", ".github/workflows/mobile-ci.yml"]
   workflow_call:
 
 concurrency:
@@ -17,7 +17,7 @@ permissions:
 
 defaults:
   run:
-    working-directory: mobile
+    working-directory: .
 
 jobs:
   check:
@@ -46,7 +46,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: couverture-mobile
-          path: mobile/coverage/lcov.info
+          path: coverage/lcov.info
           if-no-files-found: ignore
 
   android:
@@ -78,5 +78,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: loveline-debug-apk
-          path: mobile/build/app/outputs/flutter-apk/app-debug.apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
           retention-days: 7
