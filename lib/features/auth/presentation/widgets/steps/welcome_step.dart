@@ -17,8 +17,8 @@ class WelcomeStep extends ConsumerWidget {
     return AuthStepScaffold(
       title: name.isEmpty ? 'Bienvenue.' : 'Bienvenue,\n$name.',
       subtitle: 'Votre compte est prêt.',
-      child: const SizedBox.shrink(),
       footer: PrimaryButton(label: 'Continuer', onPressed: controller.finishWelcome),
+      child: const SizedBox.shrink(),
     );
   }
 }

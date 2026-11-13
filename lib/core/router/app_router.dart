@@ -50,11 +50,15 @@ String? resolveRedirect({
   required bool holdInFlow,
 }) {
   if (isAuthenticated) {
-    if (needsIdentity || holdInFlow) return location == Routes.auth ? null : Routes.auth;
+    if (needsIdentity || holdInFlow) {
+      return location == Routes.auth ? null : Routes.auth;
+    }
     return (location == Routes.onboarding || location == Routes.auth) ? Routes.home : null;
   }
 
-  if (!hasSeenOnboarding) return location == Routes.onboarding ? null : Routes.onboarding;
+  if (!hasSeenOnboarding) {
+    return location == Routes.onboarding ? null : Routes.onboarding;
+  }
   return location == Routes.auth ? null : Routes.auth;
 }
 
