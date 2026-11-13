@@ -10,7 +10,7 @@ permissions:
 
 defaults:
   run:
-    working-directory: mobile
+    working-directory: loveline
 
 jobs:
   ci:
