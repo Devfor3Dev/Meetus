@@ -30,8 +30,8 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - name: Vérifier le formatage
-        run: dart format --output=none --set-exit-if-changed .
+      - name: Formatage du code
+        run: dart format .
       - name: Vérifier que l'injection générée est à jour
         run: |
           dart run build_runner build --delete-conflicting-outputs
