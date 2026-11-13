@@ -1,6 +1,6 @@
 name: Sandbox CI
 
-# Serveur d'essai FastAPI. Il n'est ni publié ni déployé : seuls ses tests tournent.
+# Serveur d'essai FastAPI.
 on:
   push:
     branches: [main]
