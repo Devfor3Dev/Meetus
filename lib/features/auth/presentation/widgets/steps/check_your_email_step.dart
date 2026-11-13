@@ -32,7 +32,6 @@ class CheckYourEmailStep extends ConsumerWidget {
           'Ouvrez-le pour finaliser votre inscription.',
       errorMessage: state.errorMessage,
       infoMessage: state.infoMessage,
-      child: const SizedBox.shrink(),
       footer: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -53,6 +52,7 @@ class CheckYourEmailStep extends ConsumerWidget {
           ),
         ],
       ),
+      child: const SizedBox.shrink(),
     );
   }
 }

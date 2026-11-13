@@ -55,6 +55,10 @@ class _CreatePasswordStepState extends ConsumerState<CreatePasswordStep> {
       subtitle: 'Au moins ${SignupRules.minPasswordLength} caractères.',
       onBack: controller.back,
       errorMessage: state.errorMessage,
+      footer: PrimaryButton(
+        label: state.isLoading ? 'Création du compte…' : 'Créer mon compte',
+        onPressed: state.isLoading ? null : _submit,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -73,10 +77,6 @@ class _CreatePasswordStepState extends ConsumerState<CreatePasswordStep> {
           const SizedBox(height: 16),
           _StrengthMeter(controller: _password),
         ],
-      ),
-      footer: PrimaryButton(
-        label: state.isLoading ? 'Création du compte…' : 'Créer mon compte',
-        onPressed: state.isLoading ? null : _submit,
       ),
     );
   }

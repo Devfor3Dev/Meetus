@@ -12,7 +12,7 @@ import 'routes.dart';
 
 /// Construit le routeur.
 /// la navigation
-/// découle de l'état de session et de l'onboarding, et le routeur se réévalue à
+/// qui viens de l'état de session et de l'onboarding, et le routeur se réévalue à
 /// chaque changement.
 GoRouter buildAppRouter() {
   final session = getIt<AuthSessionStore>();
@@ -50,11 +50,15 @@ String? resolveRedirect({
   required bool holdInFlow,
 }) {
   if (isAuthenticated) {
-    if (needsIdentity || holdInFlow) return location == Routes.auth ? null : Routes.auth;
+    if (needsIdentity || holdInFlow) {
+      return location == Routes.auth ? null : Routes.auth;
+    }
     return (location == Routes.onboarding || location == Routes.auth) ? Routes.home : null;
   }
 
-  if (!hasSeenOnboarding) return location == Routes.onboarding ? null : Routes.onboarding;
+  if (!hasSeenOnboarding) {
+    return location == Routes.onboarding ? null : Routes.onboarding;
+  }
   return location == Routes.auth ? null : Routes.auth;
 }
 

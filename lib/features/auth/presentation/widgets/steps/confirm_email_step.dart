@@ -19,10 +19,6 @@ class ConfirmEmailStep extends ConsumerWidget {
       title: 'Cette adresse\nest correcte\u00a0?',
       onBack: controller.back,
       errorMessage: state.errorMessage,
-      child: Text(
-        state.email,
-        style: theme.textTheme.headlineMedium?.copyWith(color: theme.colorScheme.onSurface),
-      ),
       footer: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -34,6 +30,10 @@ class ConfirmEmailStep extends ConsumerWidget {
             onPressed: controller.editEmail,
           ),
         ],
+      ),
+      child: Text(
+        state.email,
+        style: theme.textTheme.headlineMedium?.copyWith(color: theme.colorScheme.onSurface),
       ),
     );
   }

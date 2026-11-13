@@ -36,7 +36,9 @@ class GoogleIdTokenSource {
       if (idToken == null || idToken.isEmpty) throw AuthException.generic();
       return idToken;
     } on GoogleSignInException catch (error) {
-      if (error.code == GoogleSignInExceptionCode.canceled) throw AuthException.cancelled();
+      if (error.code == GoogleSignInExceptionCode.canceled) {
+        throw AuthException.cancelled();
+      }
       debugPrint('Connexion Google impossible : ${error.code}');
       throw AuthException.providerUnavailable('Google');
     }

@@ -35,7 +35,9 @@ class _FakeServer implements HttpClientAdapter {
           ? _json({'error': {'code': 'invalid_refresh_token'}}, 401)
           : _json({'access_token': 'nouveau'}, 200);
     }
-    if (options.headers['Authorization'] == 'Bearer nouveau') return _json({'ok': true}, 200);
+    if (options.headers['Authorization'] == 'Bearer nouveau') {
+      return _json({'ok': true}, 200);
+    }
     return _json({'error': {'code': 'unauthorized'}}, 401);
   }
 
