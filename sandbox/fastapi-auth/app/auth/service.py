@@ -203,7 +203,7 @@ def register(
 
 
 def resend_verification(db: Session, settings: Settings, sender: EmailSender, email: str) -> None:
-    """Réponse identique que le compte existe ou non"""
+    """Réponse identique que le compte existe ou non """
     user = _find_user(db, normalize_email(email))
     if user is not None and not user.is_verified:
         _send_verification(db, settings, sender, user, respect_cooldown=True)
@@ -253,8 +253,7 @@ def login(db: Session, settings: Settings, *, email: str, password: str) -> Issu
     return issue_session(db, settings, user)
 
 
-# Google et Facebook
-
+#  Google et Facebook
 
 def sign_in_with_provider(
     db: Session, settings: Settings, verifier: TokenVerifier, token: str

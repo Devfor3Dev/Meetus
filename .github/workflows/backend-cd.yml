@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     tags: ["v*"]
-    paths: ["Backend/**", ".github/workflows/backend-cd.yml"]
+    paths: ["backend/**", ".github/workflows/backend-cd.yml"]
   workflow_dispatch:
 
 concurrency:
@@ -27,6 +27,7 @@ jobs:
       contents: read
       packages: write
     env:
+      # Secret optionnel : l'adresse d'appel de l'hébergeur (Render, Railway, etc.) pour redéployer.
       DEPLOY_HOOK_URL: ${{ secrets.DEPLOY_HOOK_URL }}
     steps:
       - uses: actions/checkout@v4
@@ -46,12 +47,12 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
       - uses: docker/build-push-action@v6
         with:
-          context: Backend/Loveline
+          context: backend
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            WSGI_MODULE=${{ vars.DJANGO_WSGI_MODULE || 'Loveline.wsgi:application' }}
+            WSGI_MODULE=${{ vars.DJANGO_WSGI_MODULE || 'config.wsgi:application' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Déclencher le déploiement

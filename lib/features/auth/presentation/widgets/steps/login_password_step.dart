@@ -44,10 +44,6 @@ class _LoginPasswordStepState extends ConsumerState<LoginPasswordStep> {
       onBack: controller.back,
       errorMessage: state.errorMessage,
       infoMessage: state.infoMessage,
-      footer: PrimaryButton(
-        label: state.isLoading ? 'Connexion…' : 'Se connecter',
-        onPressed: state.isLoading ? null : _submit,
-      ),
       child: AppTextField(
         controller: _password,
         label: 'Mot de passe',
@@ -58,6 +54,10 @@ class _LoginPasswordStepState extends ConsumerState<LoginPasswordStep> {
         validator: _validate,
         showErrors: _showErrors,
         onSubmitted: (_) => _submit(),
+      ),
+      footer: PrimaryButton(
+        label: state.isLoading ? 'Connexion…' : 'Se connecter',
+        onPressed: state.isLoading ? null : _submit,
       ),
     );
   }

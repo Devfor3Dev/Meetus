@@ -18,7 +18,7 @@ void main() {
   testWidgets('affiche la première diapositive au premier lancement', (tester) async {
     await _pumpApp(tester);
 
-    expect(find.textContaining('tout le monde'), findsOneWidget);
+    expect(find.textContaining('quantine'), findsOneWidget);
     expect(find.text('Continuer'), findsOneWidget);
     expect(find.text('Passer'), findsOneWidget);
   });
@@ -26,7 +26,7 @@ void main() {
   testWidgets('saute l’onboarding s’il a déjà été vu', (tester) async {
     await _pumpApp(tester, seen: true);
 
-    expect(find.textContaining('tout le monde'), findsNothing);
+    expect(find.textContaining('quantine'), findsNothing);
     expect(find.text(_emailTitle), findsOneWidget);
   });
 
@@ -35,7 +35,11 @@ void main() {
 
     await tester.tap(find.text('Continuer'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('vraie rencontre'), findsOneWidget);
+    expect(find.textContaining('feeling'), findsOneWidget);
+
+    await tester.tap(find.text('Continuer'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Mesdames'), findsOneWidget);
 
     await tester.tap(find.text('Continuer'));
     await tester.pumpAndSettle();
@@ -64,7 +68,7 @@ void main() {
     await tester.fling(find.byType(PageView), const Offset(-400, 0), 1000);
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('vraie rencontre'), findsOneWidget);
+    expect(find.textContaining('feeling'), findsOneWidget);
   });
 
   testWidgets('le bouton retour revient à la page précédente', (tester) async {
@@ -75,6 +79,6 @@ void main() {
     await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('tout le monde'), findsOneWidget);
+    expect(find.textContaining('quantine'), findsOneWidget);
   });
 }

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:loveline/features/onboarding/application/onboarding_controller.dart';
+import 'package:loveline/features/onboarding/domain/onboarding_slide.dart';
 
 import '../../support/test_di.dart';
 
@@ -11,7 +12,8 @@ void main() {
     addTearDown(container.dispose);
 
     expect(container.read(onboardingControllerProvider).isLast, isFalse);
-    container.read(onboardingControllerProvider.notifier).onPageChanged(2);
+    final lastIndex = OnboardingContent.slides.length - 1;
+    container.read(onboardingControllerProvider.notifier).onPageChanged(lastIndex);
     expect(container.read(onboardingControllerProvider).isLast, isTrue);
   });
 

@@ -18,5 +18,9 @@ def ready(response: Response, db: Session = Depends(get_db)) -> dict[str, str]:
         db.execute(text("SELECT 1"))
     except Exception:
         response.status_code = 503
-        return {"status": "unavailable"}
-    return {"status": "ok"}
+        return {
+            "status": "unavailable"
+        }
+    return {
+        "status": "ok"
+    }

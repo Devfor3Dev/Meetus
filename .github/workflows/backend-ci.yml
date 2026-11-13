@@ -3,9 +3,9 @@ name: Backend CI
 on:
   push:
     branches: [main]
-    paths: ["Backend/**", ".github/workflows/backend-ci.yml"]
+    paths: ["backend/**", ".github/workflows/backend-ci.yml"]
   pull_request:
-    paths: ["Backend/**", ".github/workflows/backend-ci.yml"]
+    paths: ["backend/**", ".github/workflows/backend-ci.yml"]
   workflow_call:
 
 concurrency:
@@ -17,10 +17,12 @@ permissions:
 
 defaults:
   run:
-    working-directory: Backend/Loveline
+    working-directory: backend
 
 env:
   PYTHON_VERSION: "3.12"
+  # Noms de variables à adapter à la configuration Django de l'équipe. Les deux orthographes
+  # de la clé secrète sont posées pour couvrir les conventions les plus courantes.
   SECRET_KEY: ci-secret-ci-secret-ci-secret-1234567890
   DJANGO_SECRET_KEY: ci-secret-ci-secret-ci-secret-1234567890
   DATABASE_URL: postgresql://loveline:loveline@localhost:5432/loveline
@@ -35,6 +37,8 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - run: pip install ruff
+      # Seules les erreurs graves bloquent : syntaxe, noms indéfinis, comparaisons fausses.
+      # Resserrez la sélection quand l'équipe aura décidé de ses règles.
       - run: ruff check --select E9,F63,F7,F82 .
 
   test:
@@ -59,10 +63,12 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
-          cache-dependency-path: Backend/Loveline/requirements*.txt
+          cache-dependency-path: backend/requirements*.txt
       - name: Choisir le module de réglages Django
         env:
           SETTINGS_MODULE: ${{ vars.DJANGO_SETTINGS_MODULE }}
+        # Une variable vide empêcherait manage.py d'appliquer son réglage par défaut :
+        # on ne la pose donc que si l'équipe l'a définie.
         run: |
           if [ -n "$SETTINGS_MODULE" ]; then echo "DJANGO_SETTINGS_MODULE=$SETTINGS_MODULE" >> "$GITHUB_ENV"; fi
       - name: Installer les dépendances
@@ -104,15 +110,15 @@ jobs:
       - name: Construire l'image
         uses: docker/build-push-action@v6
         with:
-          context: Backend/Loveline
+          context: backend
           load: true
           tags: loveline-backend:ci
           build-args: |
-            WSGI_MODULE=${{ vars.DJANGO_WSGI_MODULE || 'Loveline.wsgi:application' }}
+            WSGI_MODULE=${{ vars.DJANGO_WSGI_MODULE || 'config.wsgi:application' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Vérifier que Django démarre dans l'image
-        working-directory: Backend/Loveline
+        working-directory: .
         env:
           DJANGO_SETTINGS_MODULE: ${{ vars.DJANGO_SETTINGS_MODULE }}
         run: |

@@ -100,7 +100,7 @@ class AuthRepository {
       );
       final token = response.data?['access_token'] as String?;
       if (token == null || token.isEmpty) throw AuthException.generic();
-      return await _openSession(token);
+      return _openSession(token);
     } on DioException catch (error) {
       throw _mapError(error, contextLogin: true);
     }

@@ -55,10 +55,6 @@ class _EmailEntryStepState extends ConsumerState<EmailEntryStep> {
       title: 'Entrez votre\nadresse e-mail.',
       subtitle: 'Elle nous sert à créer votre compte ou à vous reconnecter.',
       errorMessage: state.errorMessage,
-      footer: PrimaryButton(
-        label: state.isLoading ? 'Vérification…' : 'Continuer',
-        onPressed: state.isLoading ? null : _submit,
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -86,6 +82,10 @@ class _EmailEntryStepState extends ConsumerState<EmailEntryStep> {
             onPressed: state.isLoading ? null : controller.signInWithFacebook,
           ),
         ],
+      ),
+      footer: PrimaryButton(
+        label: state.isLoading ? 'Vérification…' : 'Continuer',
+        onPressed: state.isLoading ? null : _submit,
       ),
     );
   }

@@ -15,9 +15,7 @@ class Settings(BaseSettings):
 
     # Adresse publique de l'API, utilisée pour fabriquer le lien de confirmation envoyé par
     # e-mail. Depuis un téléphone, c'est l'adresse de votre machine ou d'un tunnel, pas localhost.
-    public_base_url: str = (
-        "https://ankle-issuing-circular.ngrok-free.dev"  # "http://localhost:8000"
-    )
+    public_base_url: str ="https://ankle-issuing-circular.ngrok-free.dev" #"http://localhost:8000"
 
     # Identifiant client OAuth de type Web (Google Cloud), celui que le téléphone reçoit
     # comme serverClientId.

@@ -83,23 +83,6 @@ class _IdentityStepState extends ConsumerState<IdentityStep> {
       subtitle: 'Ces informations servent à créer votre profil.',
       onBack: state.socialIdentity ? null : controller.back,
       errorMessage: state.errorMessage,
-      footer: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          PrimaryButton(
-            label: state.isLoading ? 'Enregistrement…' : 'Continuer',
-            onPressed: state.isLoading ? null : _submit,
-          ),
-          if (state.socialIdentity) ...[
-            const SizedBox(height: 4),
-            TextLinkButton(
-              label: 'Utiliser un autre compte',
-              color: theme.colorScheme.primary,
-              onPressed: state.isLoading ? null : controller.switchAccount,
-            ),
-          ],
-        ],
-      ),
       child: Column(
         children: [
           AppTextField(
@@ -126,6 +109,23 @@ class _IdentityStepState extends ConsumerState<IdentityStep> {
             autofillHints: const [AutofillHints.familyName],
             onSubmitted: (_) => _submit(),
           ),
+        ],
+      ),
+      footer: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          PrimaryButton(
+            label: state.isLoading ? 'Enregistrement…' : 'Continuer',
+            onPressed: state.isLoading ? null : _submit,
+          ),
+          if (state.socialIdentity) ...[
+            const SizedBox(height: 4),
+            TextLinkButton(
+              label: 'Utiliser un autre compte',
+              color: theme.colorScheme.primary,
+              onPressed: state.isLoading ? null : controller.switchAccount,
+            ),
+          ],
         ],
       ),
     );
