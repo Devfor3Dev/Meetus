@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
+    <option name="additionalArgs" value="--dart-define=API_BASE_URL=https://ankle-issuing-circular.ngrok-free.dev --dart-define=GOOGLE_SERVER_CLIENT_ID=573671166765-rfe6o3682jrcrkj4esk90rrglr0p2m30.apps.googleusercontent.com" />
+    <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -1,0 +1,41 @@
+# Environnement local du vrai backend (Django) avec sa base PostgreSQL.
+#   docker compose up --build
+# Les noms de variables sont à ajuster avec l'équipe Django.
+# Vérifications du mobile dans un conteneur :
+#   docker compose --profile tools run --rm mobile-check
+# Serveur d'essai FastAPI : voir sandbox/fastapi-auth/docker-compose.yml
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: loveline
+      POSTGRES_PASSWORD: loveline
+      POSTGRES_DB: loveline
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U loveline"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    environment:
+      SECRET_KEY: changez-moi-en-local-seulement
+      DJANGO_SECRET_KEY: changez-moi-en-local-seulement
+      DATABASE_URL: postgresql://loveline:loveline@db:5432/loveline
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  mobile-check:
+    profiles: ["tools"]
+    build:
+      context: ./mobile
+      target: check
+
+volumes:
+  db-data:

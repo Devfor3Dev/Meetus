@@ -1,0 +1,8 @@
+build
+.dart_tool
+.idea
+.vscode
+coverage
+**/.DS_Store
+Dockerfile
+.dockerignore
