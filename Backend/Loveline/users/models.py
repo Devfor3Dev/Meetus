@@ -2,6 +2,9 @@ from unicodedata import name
 from django.db import models
 from django.contrib.auth.models import AbstractUser 
 
+"""
+Ne pas oubier de changer le blank true et null true par false au niveau de birth_day, gender et filiere
+"""
 
 class Filiere(models.Model):
     name = models.CharField(blank=False, null=False)
