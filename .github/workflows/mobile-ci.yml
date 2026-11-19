@@ -60,7 +60,7 @@ jobs:
         run: |
           if [ -d android ]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "::warning::Pas de dossier android/, compilation ignorée. Lancez flutter create --platforms=android,ios ."; fi
       - if: steps.platform.outputs.present == 'true'
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: "17"
