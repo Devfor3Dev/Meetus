@@ -16,7 +16,9 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True, blank=False, null=False)
     birth_day = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length = 30, blank=True, null=True)
+    bio = models.TextField()
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+    hoobies = models.CharField(max_length=200)
     filiere = models.ForeignKey(Filiere, on_delete=models.SET_NULL, null = True, blank= True, related_name='utilisateurs')
     
 
