@@ -1,0 +1,78 @@
+name: Mobile Release
+
+on:
+  push:
+    tags: ["mobile-v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: mobile
+
+jobs:
+  ci:
+    name: Contrôles
+    uses: ./.github/workflows/mobile-ci.yml
+
+  android:
+    name: Construire l'application Android
+    needs: ci
+    runs-on: ubuntu-latest
+    env:
+      # À définir dans Settings > Secrets and variables > Actions.
+      ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+      API_BASE_URL: ${{ vars.API_BASE_URL }}
+      GOOGLE_SERVER_CLIENT_ID: ${{ vars.GOOGLE_SERVER_CLIENT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Vérifier les prérequis
+        run: |
+          missing=0
+          for name in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS ANDROID_KEY_PASSWORD API_BASE_URL GOOGLE_SERVER_CLIENT_ID; do
+            if [ -z "${!name}" ]; then echo "::error::$name n'est pas défini."; missing=1; fi
+          done
+          if [ ! -d android ]; then echo "::error::Pas de dossier android/. Lancez flutter create --platforms=android,ios ."; missing=1; fi
+          case "$API_BASE_URL" in https://*) ;; *) echo "::error::API_BASE_URL doit commencer par https://"; missing=1;; esac
+          exit $missing
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Installer la clé de signature
+        run: |
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/upload-keystore.jks
+          {
+            echo "storePassword=$ANDROID_KEYSTORE_PASSWORD"
+            echo "keyPassword=$ANDROID_KEY_PASSWORD"
+            echo "keyAlias=$ANDROID_KEY_ALIAS"
+            echo "storeFile=upload-keystore.jks"
+          } > android/key.properties
+      - run: flutter pub get
+      - name: Construire le bundle et l'APK
+        run: |
+          flutter build appbundle --release \
+            --dart-define=API_BASE_URL="$API_BASE_URL" \
+            --dart-define=GOOGLE_SERVER_CLIENT_ID="$GOOGLE_SERVER_CLIENT_ID"
+          flutter build apk --release \
+            --dart-define=API_BASE_URL="$API_BASE_URL" \
+            --dart-define=GOOGLE_SERVER_CLIENT_ID="$GOOGLE_SERVER_CLIENT_ID"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: loveline-android-release
+          path: |
+            mobile/build/app/outputs/bundle/release/app-release.aab
+            mobile/build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
+      - name: Effacer la clé de signature
+        if: always()
+        run: rm -f android/app/upload-keystore.jks android/key.properties
