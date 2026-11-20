@@ -1,6 +1,6 @@
 
 from django.db import models
-from django.contrib.auth import settings
+from django.conf import settings
 
 
 # Create your models here.
@@ -14,6 +14,6 @@ class Like(models.Model):
             models.UniqueConstraint(fields=['liker', 'liked'], name='unique_like'),
             models.CheckConstraint(condition=~models.Q(liker=models.F('liked')), name='no_self_like'),
         ]
-        def __str__(self):
-            return f"{self.liker} likes {self.liked}"
+    def __str__(self):
+        return f"{self.liker} likes {self.liked}"
 

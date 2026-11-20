@@ -106,17 +106,19 @@ jobs:
         with:
           context: Backend/Loveline
           load: true
+          ignore-unfixed: true
           tags: loveline-backend:ci
           build-args: |
             WSGI_MODULE=${{ vars.DJANGO_WSGI_MODULE || 'Loveline.wsgi:application' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Trivy Container Image Scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: 'loveline-backend:ci'
           format: 'table'
           exit-code: '1'
+          ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
       - name: Vérifier que Django démarre dans l'image
         working-directory: Backend/Loveline

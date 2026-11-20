@@ -1,4 +1,3 @@
-from unicodedata import name
 from django.db import models
 from django.contrib.auth.models import AbstractUser 
 
@@ -7,7 +6,7 @@ Ne pas oubier de changer le blank true et null true par false au niveau de birth
 """
 
 class Filiere(models.Model):
-    name = models.CharField(blank=False, null=False)
+    name = models.CharField(max_length = 250,blank=False, null=False)
 
     def __str__(self):
         return f"{self.name}"
