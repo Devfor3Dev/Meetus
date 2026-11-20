@@ -21,7 +21,7 @@ jobs:
     name: Gitleaks (Détection de secrets)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Scanner les secrets avec Gitleaks
@@ -35,7 +35,7 @@ jobs:
     container:
       image: semgrep/semgrep
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Exécuter Semgrep SAST
         run: semgrep scan --config auto --sarif --output=semgrep.sarif
       - name: Déposer le rapport SARIF dans GitHub Security
@@ -48,7 +48,7 @@ jobs:
     name: Trivy (Scanner de vulnérabilités & misconfigurations)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Trivy Repo Scan
         uses: aquasecurity/trivy-action@v0.36.0
         env:
