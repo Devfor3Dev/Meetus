@@ -1,4 +1,4 @@
-from django.conf.locale import de
+
 from django.db import models
 from django.contrib.auth import settings
 
