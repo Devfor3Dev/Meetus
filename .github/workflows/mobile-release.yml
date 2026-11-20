@@ -30,7 +30,7 @@ jobs:
       API_BASE_URL: ${{ vars.API_BASE_URL }}
       GOOGLE_SERVER_CLIENT_ID: ${{ vars.GOOGLE_SERVER_CLIENT_ID }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Vérifier les prérequis
         run: |
           missing=0
