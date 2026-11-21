@@ -40,7 +40,7 @@ jobs:
           if [ ! -d android ]; then echo "::error::Pas de dossier android/. Lancez flutter create --platforms=android,ios ."; missing=1; fi
           case "$API_BASE_URL" in https://*) ;; *) echo "::error::API_BASE_URL doit commencer par https://"; missing=1;; esac
           exit $missing
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: "17"
